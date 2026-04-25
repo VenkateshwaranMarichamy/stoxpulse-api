@@ -1,65 +1,64 @@
-"""
-SQLAlchemy mapped classes for the PostgreSQL views.
-Views are read-only — no primary key enforcement needed beyond mapping.
-"""
-from sqlalchemy import Column, Date, Integer, Numeric, String, Text
-from sqlalchemy.orm import mapped_column
-
+from sqlalchemy import BigInteger, Column, Date, Integer, Numeric, String, Text
+from sqlalchemy.dialects.postgresql import ARRAY
 from app.database import Base
 
 
 class CommodityProfile(Base):
     __tablename__ = "vw_commodity_profile"
+    __table_args__ = {"schema": "commodities"}
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
     category = Column(String)
-    unit = Column(String)
-    description = Column(Text)
-    current_price = Column(Numeric)
-    currency = Column(String)
-    exchange = Column(String)
-    country_of_origin = Column(String)
-    last_updated = Column(Date)
+    definition = Column(Text)
+    uses = Column(Text)
+    major_producers = Column(ARRAY(String))
+    notes = Column(ARRAY(String))
+    trade_records = Column(BigInteger)
+    news_count = Column(BigInteger)
 
 
 class TradeSummary(Base):
     __tablename__ = "vw_trade_summary"
+    __table_args__ = {"schema": "commodities"}
 
-    id = Column(Integer, primary_key=True)
-    commodity = Column(String)
-    year = Column(Integer)
-    total_export_volume = Column(Numeric)
-    total_import_volume = Column(Numeric)
-    net_trade_balance = Column(Numeric)
-    top_exporter = Column(String)
-    top_importer = Column(String)
-    avg_price = Column(Numeric)
+    name = Column(String, primary_key=True)
+    category = Column(String)
+    type = Column(String, primary_key=True)
+    year = Column(Integer, primary_key=True)
+    countries = Column(ARRAY(String))
+    total_value = Column(String)
     currency = Column(String)
+    volume_metric = Column(String)
+    description = Column(Text)
+    source = Column(String)
 
 
 class LatestNews(Base):
     __tablename__ = "vw_latest_news"
+    __table_args__ = {"schema": "commodities"}
 
-    id = Column(Integer, primary_key=True)
-    headline = Column(String)
-    summary = Column(Text)
-    source = Column(String)
-    url = Column(String)
+    url = Column(String, primary_key=True)
+    pub_date = Column(Date)
     commodity = Column(String)
-    published_at = Column(Date)
+    category = Column(String)
+    title = Column(String)
+    summary = Column(Text)
     sentiment = Column(String)
+    impact_rating = Column(String)
+    source = Column(String)
+    keywords = Column(ARRAY(String))
 
 
 class HighImpactNews(Base):
     __tablename__ = "vw_high_impact_news"
+    __table_args__ = {"schema": "commodities"}
 
-    id = Column(Integer, primary_key=True)
-    headline = Column(String)
-    summary = Column(Text)
-    source = Column(String)
-    url = Column(String)
+    url = Column(String, primary_key=True)
+    pub_date = Column(Date)
     commodity = Column(String)
-    published_at = Column(Date)
-    impact_score = Column(Numeric)
+    category = Column(String)
+    title = Column(String)
     sentiment = Column(String)
+    impact_rating = Column(String)
+    source = Column(String)

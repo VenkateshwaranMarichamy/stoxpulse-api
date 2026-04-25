@@ -10,6 +10,7 @@ engine = create_async_engine(
     pool_pre_ping=True,
     pool_recycle=3600,
     echo=False,
+    connect_args={"server_settings": {"search_path": "commodities,public"}},
 )
 
 AsyncSessionLocal = async_sessionmaker(
