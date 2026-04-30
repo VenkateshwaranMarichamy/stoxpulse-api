@@ -16,10 +16,36 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Commodity Data API",
-    description=(
-        "Production-grade REST API exposing commodity profiles, "
-        "trade summaries, and news feeds sourced from PostgreSQL views."
-    ),
+    description="""
+Production-grade REST API exposing commodity profiles, trade summaries, and news feeds sourced from PostgreSQL views.
+
+## Routers
+
+### Commodities — Read
+Endpoints for querying commodity data from PostgreSQL views:
+- **Profiles** — full commodity details including definition, uses, major producers, trade record count, and news count
+- **Trade Summary** — aggregated trade data filterable by commodity name and year
+- **Latest News** — paginated news feed ordered by publication date
+- **High-Impact News** — filtered view of high-impact news, optionally scoped to a commodity
+
+### Admin — Write
+CRUD endpoints for managing the underlying commodity data:
+- **Commodities** — create and update commodity records
+- **News** — add and update news articles linked to a commodity
+- **Trade** — add and update trade records linked to a commodity
+
+## Notes
+- All list endpoints return a `{ total_count, items }` paginated envelope
+- Write endpoints validate that the referenced `commodity_id` exists before inserting
+- CORS is configured via `CORS_ORIGINS` in `.env`; all `localhost` ports are allowed by default
+- Logs are written to `logs/app.log`
+
+## Start the server
+```
+source .venv/bin/activate
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
+```
+""",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
